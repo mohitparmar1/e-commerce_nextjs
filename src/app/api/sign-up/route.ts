@@ -41,6 +41,7 @@ export async function POST(request: Request) {
         return Response.json({
             success: true,
             message: "User created successfully",
+            role: newUser.role
         }, {
             status: 201
         });
