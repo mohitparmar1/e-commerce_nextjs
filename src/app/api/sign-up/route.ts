@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     await dbConnect();
 
     try {
-        const { username, email, password } = await request.json();
+        const { username, email, password, role } = await request.json();
 
         if (!username || !email || !password) {
             return Response.json({
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
             username,
             email,
             password: hashedPassword,
+            role: role || "user"
         });
         await newUser.save();
 
