@@ -6,11 +6,47 @@ export interface User extends Document {
     password: string;
     role: 'admin' | 'user';
 }
+
+export interface Purchase extends Document {
+    userId: string;
+    productId: string;
+    productName: string;
+    productPrice: number;
+    productDescription: string;
+    purchaseDate: Date;
+}
 export interface Product extends Document {
     name: string;
     price: number;
     description: string;
 }
+
+const PurchaseSchema = new Schema<Purchase>({
+    userId: {
+        type: String, // Or mongoose.Schema.Types.ObjectId, depending on how you store user IDs
+        required: true
+    },
+    productId: {
+        type: String, // Or mongoose.Schema.Types.ObjectId
+        required: true
+    },
+    productName: {
+        type: String,
+        required: true
+    },
+    productPrice: {
+        type: Number,
+        required: true
+    },
+    productDescription: {
+        type: String,
+        required: true
+    },
+    purchaseDate: {
+        type: Date,
+        default: Date.now
+    }
+});
 
 const userSchema = new Schema<User>({
     username: {
@@ -52,4 +88,9 @@ const User =
     mongoose.model<User>('User', userSchema);
 
 const Product = (mongoose.models.Product as mongoose.Model<Product>) || mongoose.model<Product>('Product', ProductSchema)
-export { User, Product };
+
+const Purchase =
+    (mongoose.models.Purchase as mongoose.Model<Purchase>) ||
+    mongoose.model<Purchase>('Purchase', PurchaseSchema);
+
+export { User, Product, Purchase };

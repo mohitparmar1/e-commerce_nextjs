@@ -40,10 +40,11 @@ export async function POST(request: Request) {
 
         return Response.json({
             success: true,
-            message: "User created successfully",
-            role: newUser.role
+            message: 'Successfully signed in',
+            userId: newUser._id.toString(), // Assuming user._id is the user ID
+            role: newUser.role,
         }, {
-            status: 201
+            status: 200
         });
     } catch (error) {
         console.error("Error registering user", error);

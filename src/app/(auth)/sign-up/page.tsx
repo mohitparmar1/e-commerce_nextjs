@@ -31,6 +31,16 @@ export default function AuthForm() {
       const result = await response.json();
 
       if (result.success) {
+        try {
+          localStorage.setItem("userId", result.userId);
+        } catch (error) {
+          console.error("Error saving to localStorage:", error);
+          toast({
+            title: "Error",
+            description: "Error saving user ID to local storage.",
+            variant: "destructive",
+          });
+        }
         toast({ title: result.message, variant: "default" });
 
         if (result.role) {

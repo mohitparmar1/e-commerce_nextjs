@@ -2,13 +2,12 @@ import dbConnect from "@/app/utils/dbConnect";
 import { User } from "@/app/model/User.Model";
 import bcrypt from "bcryptjs";
 
-
 export async function POST(request: Request) {
     await dbConnect()
 
     const { email, password } = await request.json();
 
-    const isUser = await User.findOne({ email })
+    const isUser: { _id: string; email: string; password: string; role: string } | null = await User.findOne({ email })
 
     if (!isUser) {
         return Response.json({
@@ -23,7 +22,9 @@ export async function POST(request: Request) {
             if (isUser.email == email && (await bcrypt.compare(password, isUser.password))) {
                 return Response.json({
                     success: true,
-                    message: 'Successfully Login'
+                    message: 'Successfully Login',
+                    userId: isUser._id.toString(),
+                    role: isUser.role
                 }, {
                     status: 200
                 })
