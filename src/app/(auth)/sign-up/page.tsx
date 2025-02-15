@@ -83,7 +83,7 @@ export default function AuthForm() {
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
             <TabsContent value="signin">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit((data) => onSubmit(data))}>
                 <div className="mb-4">
                   <Label>Email</Label>
                   <Input
@@ -116,7 +116,7 @@ export default function AuthForm() {
               </form>
             </TabsContent>
             <TabsContent value="signup">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit((data) => onSubmit(data))}>
                 <div className="mb-4">
                   <Label>Username</Label>
                   <Input
