@@ -57,15 +57,21 @@ function CreateProductForm() {
     name: string;
     price: number;
     description: string;
+    image: FileList;
   }
 
   const onSubmit = async (data: ProductFormData) => {
     setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("price", data.price.toString());
+      formData.append("description", data.description);
+      formData.append("image", data.image[0]);
+
       const response = await fetch("/api/create-product", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       });
       const result = await response.json();
       toast({
@@ -124,6 +130,16 @@ function CreateProductForm() {
           </p>
         )}
       </div>
+      <div className="mb-4">
+        <Label>Image</Label>
+        <Input
+          type="file"
+          {...register("image", { required: "Image is required" })}
+        />
+        {errors.image && (
+          <p className="text-red-500 text-sm">{String(errors.image.message)}</p>
+        )}
+      </div>
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? "Creating..." : "Create Product"}
       </Button>
@@ -177,7 +193,7 @@ function ProductCard({ product }: { product: Product }) {
     setLoading(true);
     try {
       // Get the user ID from localStorage (replace with your actual user ID retrieval method)
-      const userId = localStorage.getItem("urerId"); // Assuming you store userId in localStorage
+      const userId = localStorage.getItem("urerId"); 
       if (!userId) {
         toast({
           title: "Error",

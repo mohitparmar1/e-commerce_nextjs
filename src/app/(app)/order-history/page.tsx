@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Use next/navigation
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface Purchase {
   _id: string;
@@ -11,6 +12,7 @@ interface Purchase {
   productPrice: number;
   productDescription: string;
   purchaseDate: string;
+  imageUrl: string; // Add this field
 }
 
 function OrderHistoryPage() {
@@ -21,7 +23,7 @@ function OrderHistoryPage() {
   useEffect(() => {
     const fetchPurchaseHistory = async () => {
       try {
-        const userId = localStorage.getItem("urerId");
+        const userId = localStorage.getItem("userId"); // Fixed typo here
         if (!userId) {
           toast({
             title: "Error",
@@ -77,6 +79,11 @@ function OrderHistoryPage() {
                   key={purchase._id}
                   className="bg-white shadow-md rounded-lg overflow-hidden"
                 >
+                  <Image
+                    src={purchase.imageUrl}
+                    alt={purchase.productName}
+                    className="w-full h-48 object-cover"
+                  />
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-gray-800">
                       {purchase.productName}

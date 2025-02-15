@@ -14,6 +14,7 @@ export interface Purchase extends Document {
     productPrice: number;
     productDescription: string;
     purchaseDate: Date;
+    imageUrl: string; // Add this field
 }
 export interface Product extends Document {
     name: string;
@@ -45,6 +46,10 @@ const PurchaseSchema = new Schema<Purchase>({
     purchaseDate: {
         type: Date,
         default: Date.now
+    },
+    imageUrl: {
+        type: String,
+        required: true
     }
 });
 
