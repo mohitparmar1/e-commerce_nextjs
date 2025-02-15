@@ -18,6 +18,7 @@ interface FormData {
 
 export default function AuthForm() {
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState<"signin" | "signup">("signin");
   const {
     register,
     handleSubmit,
@@ -26,7 +27,7 @@ export default function AuthForm() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const onSubmit = async (data: FormData, type: string) => {
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
       const endpoint = type === "signin" ? "/api/sign-in" : "/api/sign-up";
@@ -35,26 +36,16 @@ export default function AuthForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+
       const result = await response.json();
 
       if (result.success) {
-        try {
-          localStorage.setItem("userId", result.userId);
-        } catch (error) {
-          console.error("Error saving to localStorage:", error);
-          toast({
-            title: "Error",
-            description: "Error saving user ID to local storage.",
-            variant: "destructive",
-          });
-        }
-        toast({ title: result.message, variant: "default" });
-
+        localStorage.setItem("userId", result.userId);
         if (result.role) {
           localStorage.setItem("Role", result.role);
         }
+        toast({ title: result.message, variant: "default" });
 
-        // Redirect after successful sign-up/sign-in
         router.push("/dashboard");
       } else {
         toast({
@@ -69,8 +60,9 @@ export default function AuthForm() {
         description: "Something went wrong!",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -82,17 +74,16 @@ export default function AuthForm() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="signin" onValueChange={(value) => setType(value)}>
-            {" "}
-            {/* Use onValueChange */}
+          <Tabs
+            defaultValue="signin"
+            onValueChange={(value) => setType(value as "signin" | "signup")}
+          >
             <TabsList className="grid grid-cols-2">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
             <TabsContent value="signin">
-              <form onSubmit={handleSubmit((data) => onSubmit(data, "signin"))}>
-                {" "}
-                {/* Pass type to onSubmit */}
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <Label>Email</Label>
                   <Input
@@ -101,12 +92,7 @@ export default function AuthForm() {
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm">
-                      {errors.email.message &&
-                        typeof errors.email.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.email.message}
-                          </p>
-                        )}
+                      {errors.email.message}
                     </p>
                   )}
                 </div>
@@ -120,12 +106,7 @@ export default function AuthForm() {
                   />
                   {errors.password && (
                     <p className="text-red-500 text-sm">
-                      {errors.password.message &&
-                        typeof errors.password.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.password.message}
-                          </p>
-                        )}
+                      {errors.password.message}
                     </p>
                   )}
                 </div>
@@ -135,9 +116,7 @@ export default function AuthForm() {
               </form>
             </TabsContent>
             <TabsContent value="signup">
-              <form onSubmit={handleSubmit((data) => onSubmit(data, "signup"))}>
-                {" "}
-                {/* Pass type to onSubmit */}
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <Label>Username</Label>
                   <Input
@@ -148,12 +127,7 @@ export default function AuthForm() {
                   />
                   {errors.username && (
                     <p className="text-red-500 text-sm">
-                      {errors.username.message &&
-                        typeof errors.username.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.username.message}
-                          </p>
-                        )}
+                      {errors.username.message}
                     </p>
                   )}
                 </div>
@@ -165,12 +139,7 @@ export default function AuthForm() {
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm">
-                      {errors.email.message &&
-                        typeof errors.email.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.email.message}
-                          </p>
-                        )}
+                      {errors.email.message}
                     </p>
                   )}
                 </div>
@@ -184,12 +153,7 @@ export default function AuthForm() {
                   />
                   {errors.password && (
                     <p className="text-red-500 text-sm">
-                      {errors.password.message &&
-                        typeof errors.password.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.password.message}
-                          </p>
-                        )}
+                      {errors.password.message}
                     </p>
                   )}
                 </div>
@@ -197,19 +161,12 @@ export default function AuthForm() {
                   <Label>Role</Label>
                   <Input
                     placeholder="admin/user"
-                    type="role"
-                    {...register("role", {
-                      required: "role is required",
-                    })}
+                    type="text"
+                    {...register("role", { required: "Role is required" })}
                   />
                   {errors.role && (
                     <p className="text-red-500 text-sm">
-                      {errors.role.message &&
-                        typeof errors.role.message === "string" && (
-                          <p className="text-red-500 text-sm">
-                            {errors.role.message}
-                          </p>
-                        )}
+                      {errors.role.message}
                     </p>
                   )}
                 </div>
