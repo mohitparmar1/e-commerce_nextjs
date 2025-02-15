@@ -8,21 +8,28 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+
+interface FormData {
+  username?: string;
+  email: string;
+  password: string;
+  role?: string;
+}
+
 export default function AuthForm() {
   const [loading, setLoading] = useState(false);
-  const [Type, setType] = useState("signin");
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
   const { toast } = useToast();
   const router = useRouter();
 
-  const onSubmit = async (data: any, Type: string) => {
+  const onSubmit = async (data: FormData, type: string) => {
     setLoading(true);
     try {
-      const endpoint = Type === "signin" ? "/api/sign-in" : "/api/sign-up";
+      const endpoint = type === "signin" ? "/api/sign-in" : "/api/sign-up";
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
