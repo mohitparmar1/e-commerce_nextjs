@@ -19,7 +19,7 @@ export default function AuthForm() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const onSubmit = async (data, Type) => {
+  const onSubmit = async (data: any, Type: string) => {
     setLoading(true);
     try {
       const endpoint = Type === "signin" ? "/api/sign-in" : "/api/sign-up";
@@ -48,7 +48,7 @@ export default function AuthForm() {
         }
 
         // Redirect after successful sign-up/sign-in
-        router.push("/");
+        router.push("/dashboard");
       } else {
         toast({
           title: "Error",
@@ -181,6 +181,26 @@ export default function AuthForm() {
                         typeof errors.password.message === "string" && (
                           <p className="text-red-500 text-sm">
                             {errors.password.message}
+                          </p>
+                        )}
+                    </p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <Label>Role</Label>
+                  <Input
+                    placeholder="admin/user"
+                    type="role"
+                    {...register("role", {
+                      required: "role is required",
+                    })}
+                  />
+                  {errors.role && (
+                    <p className="text-red-500 text-sm">
+                      {errors.role.message &&
+                        typeof errors.role.message === "string" && (
+                          <p className="text-red-500 text-sm">
+                            {errors.role.message}
                           </p>
                         )}
                     </p>
