@@ -1,7 +1,7 @@
 export interface ApiResponse {
     success: boolean;
     message: string;
-    data?: any;
+    data?: Record<string, unknown>;
     userId?: string;
     role?: string;
 }
