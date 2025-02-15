@@ -1,4 +1,4 @@
-// app/api/delete-product/[productId]/route.ts
+
 import dbConnect from "@/app/utils/dbConnect";
 import { Product } from "@/app/model/User.Model";
 import mongoose from "mongoose";
@@ -9,7 +9,7 @@ export async function DELETE(
 ) {
     await dbConnect();
     try {
-        const { productId } = await params;
+        const { productId } = params;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             console.error("Invalid product ID format:", productId);
